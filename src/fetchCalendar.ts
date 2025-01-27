@@ -32,12 +32,13 @@ const fetchCalendar = async ({
   const { data } = await axios.get<CalendarResponse>(baseUrl, { params });
 
   const cachePath = `${cacheFolder}/${year}-${month}.json`;
-
-  fs.mkdirSync(cacheFolder, { recursive: true });
-  fs.writeFileSync(cachePath, JSON.stringify({
+  const exportData = {
     createdAt: dayjs().toISOString(),
     ...data,
-  }, null, 2));
+  };
+
+  fs.mkdirSync(cacheFolder, { recursive: true });
+  fs.writeFileSync(cachePath, JSON.stringify(exportData, null, 2));
 
   return data;
 };
