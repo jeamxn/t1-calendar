@@ -1,16 +1,17 @@
 version: '3'
 
 services:
-  dev:
+  app:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: t1-calendar
+      dockerfile: DockerfileServer
+    container_name: t1-calendar-server
     working_dir: /app
     volumes:
       - ./:/app
     ports:
       - "3000:3000"
-    command: ["bun", "dev"]
+    command: ["bun", "start"]
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
+
