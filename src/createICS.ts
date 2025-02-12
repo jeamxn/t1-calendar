@@ -15,14 +15,14 @@ const createICS = (events: Event[]): string => {
   ];
 
   for (const event of events) {
-    const stamp = dayjs(event.createdAt).tz("Asia/Seoul", true);
+    const stamp = dayjs(event.createdAt).tz("Asia/Seoul").tz("Asia/Seoul");
     const start = event.allDay
-      ? dayjs(event.startAtAllDay).tz("Asia/Seoul", true)
-      : dayjs(event.startAt).tz("Asia/Seoul", true);
+      ? dayjs(event.startAtAllDay).tz("Asia/Seoul").tz("Asia/Seoul")
+      : dayjs(event.startAt).tz("Asia/Seoul").tz("Asia/Seoul");
     const end = event.allDay
-      ? dayjs(event.startAtAllDay).tz("Asia/Seoul", true)
+      ? dayjs(event.startAtAllDay).tz("Asia/Seoul").tz("Asia/Seoul")
       : event.endAt
-        ? dayjs(event.endAt).tz("Asia/Seoul", true)
+        ? dayjs(event.endAt).tz("Asia/Seoul").tz("Asia/Seoul")
         : start.add(1, "hour");
 
     lines.push(
