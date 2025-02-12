@@ -1,4 +1,4 @@
-import { serve } from "bun";
+import bun, { serve } from "bun";
 
 import createICS from "./createICS";
 import getEvents from "./getEvents";
@@ -27,11 +27,11 @@ const fetch = async (req: Request) => {
     error: true,
     message: "아래 링크를 사용하여 캘린더를 구독하세요.",
     types: {
-      all: `${process.env.NODE_ENV === "production" ? "https" : "http"}://${url.host}/calendar.ics`,
+      all: `${bun.env.NODE_ENV === "production" ? "https" : "http"}://${url.host}/calendar.ics`,
       ...types.reduce(
         (acc, type) => {
           if (type) {
-            acc[type] = `${process.env.NODE_ENV === "production" ? "https" : "http"}://${url.host}/calendar.ics?type=${type}`;
+            acc[type] = `${bun.env.NODE_ENV === "production" ? "https" : "http"}://${url.host}/calendar.ics?type=${type}`;
           }
           return acc;
         },
