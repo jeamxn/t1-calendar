@@ -38,6 +38,8 @@ const fetch = async (req: Request) => {
         {} as Record<string, string>,
       ),
     },
+    tip: "이 캘린더가 마음에 드신다면 아래 링크를 통해 스타를 눌러주세요!",
+    github: "https://github.com/jeamxn/t1-calendar"
   };
 
   return Response.json(response, {
