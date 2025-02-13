@@ -12,27 +12,18 @@ const createICS = (events: Event[]): string => {
     "VERSION:2.0",
     "CALSCALE:GREGORIAN",
     "PRODID:-//Custom Calendar//EN",
-    "BEGIN:VTIMEZONE",
-    "TZID:Asia/Seoul",
-    "BEGIN:STANDARD",
-    "TZOFFSETFROM:+0900",
-    "TZOFFSETTO:+0900",
-    "TZNAME:KST",
-    "DTSTART:19700101T000000",
-    "END:STANDARD",
-    "END:VTIMEZONE",
   ];
 
   for (const event of events) {
-    const stamp = dayjs.utc(event.createdAt).tz("Asia/Seoul");
+    const stamp = dayjs.utc(event.createdAt);
     console.log(event);
     const start = event.allDay
-      ? dayjs(event.startAtAllDay).tz("Asia/Seoul").startOf("day")
-      : dayjs(event.startAt).tz("Asia/Seoul");
+      ? dayjs(event.startAtAllDay).utc().startOf("day")
+      : dayjs(event.startAt).utc();
     const end = event.allDay
       ? start.add(1, "day")
       : event.endAt
-        ? dayjs(event.endAt).tz("Asia/Seoul")
+        ? dayjs(event.endAt).utc()
         : start.add(1, "hour");
 
     lines.push(
@@ -42,10 +33,10 @@ const createICS = (events: Event[]): string => {
       `SUMMARY:${event.title}${event.starAttendees?.length ? ` - ${event.starAttendees.map((a) => a.nickname).join(", ")}` : ""}`,
       event.allDay
         ? `DTSTART;VALUE=DATE:${start.format("YYYYMMDD")}`
-        : `DTSTART;TZID=Asia/Seoul:${start.format("YYYYMMDDTHHmmss")}`,
+        : `DTSTART:${start.format("YYYYMMDDTHHmmss[Z]")}`,
       event.allDay
         ? `DTEND;VALUE=DATE:${end.format("YYYYMMDD")}`
-        : `DTEND;TZID=Asia/Seoul:${end.format("YYYYMMDDTHHmmss")}`,
+        : `DTEND:${end.format("YYYYMMDDTHHmmss[Z]")}`,
       `DESCRIPTION:${event.label?.name ?? ""}`,
       `CLASS:${event.linked ? "PUBLIC" : "PRIVATE"}`,
       "END:VEVENT",
