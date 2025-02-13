@@ -40,16 +40,16 @@ const createICS = (events: Event[]): string => {
     lines.push(
       "BEGIN:VEVENT",
       `UID:${event.id}`,
-      `DTSTAMP:${stamp.format("YYYYMMDDTHHmmss[Z]")}`, // UTC 명시
+      `DTSTAMP:${stamp.format("YYYYMMDDTHHmmss[Z]")}`,
       event.allDay
-        ? `DTSTART;VALUE=DATE:${start.format("YYYYMMDD")}` // 날짜형식 (All-day 이벤트)
-        : `DTSTART;TZID=Asia/Seoul:${start.format("YYYYMMDDTHHmmss")}`, // 대한민국 시간대 지정
+        ? `DTSTART;VALUE=DATE:${start.format("YYYYMMDD")}`
+        : `DTSTART;TZID=Asia/Seoul:${start.format("YYYYMMDDTHHmmss")}`,
       event.allDay
-        ? `DTEND;VALUE=DATE:${end.format("YYYYMMDD")}` // All-day 이벤트 처리
-        : `DTEND;TZID=Asia/Seoul:${end.format("YYYYMMDDTHHmmss")}`, // 대한민국 시간대 지정
+        ? `DTEND;VALUE=DATE:${end.format("YYYYMMDD")}`
+        : `DTEND;TZID=Asia/Seoul:${end.format("YYYYMMDDTHHmmss")}`,
       `SUMMARY:${event.title}${event.starAttendees?.length ? ` - ${event.starAttendees.map((a) => a.nickname).join(", ")}` : ""}`,
       `DESCRIPTION:${event.label?.name ?? ""}`,
-      `CLASS:${event.linked ? "PUBLIC" : "PRIVATE"}`,
+      "CLASS:PUBLIC",
       "END:VEVENT",
     );
   }
