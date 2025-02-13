@@ -40,12 +40,12 @@ const createICS = (events: Event[]): string => {
     lines.push(
       "BEGIN:VEVENT",
       `UID:${event.id}`,
-      `DTSTAMP:${stamp.format("YYYYMMDDTHHmmss[Z]")}`,
+      `DTSTAMP:${stamp.format("YYYYMMDDTHHmmss[Z]")}`, // UTC 명시
       event.allDay
-        ? `DTSTART;VALUE=DATE:${start.format("YYYYMMDD")}`
+        ? `DTSTART;VALUE=DATE:${start.format("YYYYMMDD")}` // 날짜형식 (All-day 이벤트)
         : `DTSTART;TZID=Asia/Seoul:${start.format("YYYYMMDDTHHmmss")}`, // 대한민국 시간대 지정
       event.allDay
-        ? `DTEND;VALUE=DATE:${end.format("YYYYMMDD")}`
+        ? `DTEND;VALUE=DATE:${end.format("YYYYMMDD")}` // All-day 이벤트 처리
         : `DTEND;TZID=Asia/Seoul:${end.format("YYYYMMDDTHHmmss")}`, // 대한민국 시간대 지정
       `SUMMARY:${event.title}${event.starAttendees?.length ? ` - ${event.starAttendees.map((a) => a.nickname).join(", ")}` : ""}`,
       `DESCRIPTION:${event.label?.name ?? ""}`,
