@@ -15,28 +15,30 @@ const createICS = (events: Event[]): string => {
   ];
 
   for (const event of events) {
-    const stamp = dayjs.utc(event.createdAt);
+    const stamp = dayjs.utc(event.createdAt); // UTC 변환
     console.log(event);
+    
     const start = event.allDay
-      ? dayjs(event.startAtAllDay).utc().startOf("day")
-      : dayjs(event.startAt).utc();
+      ? dayjs.utc(event.startAtAllDay).startOf("day") // UTC 변환 + 날짜 시작점
+      : dayjs.utc(event.startAt);
+    
     const end = event.allDay
-      ? start.add(1, "day")
+      ? start.add(1, "day") // 하루 추가
       : event.endAt
-        ? dayjs(event.endAt).utc()
-        : start.add(1, "hour");
+        ? dayjs.utc(event.endAt)
+        : start.add(1, "hour"); // 기본적으로 1시간짜리 이벤트
 
     lines.push(
       "BEGIN:VEVENT",
       `UID:${event.id}`,
-      `DTSTAMP:${stamp.format("YYYYMMDDTHHmmss[Z]")}`,
+      `DTSTAMP:${stamp.format("YYYYMMDDTHHmmss[Z]")}`, // UTC 명시
+      event.allDay
+        ? `DTSTART;VALUE=DATE:${start.format("YYYYMMDD")}` // 날짜형식 (All-day 이벤트)
+        : `DTSTART:${start.format("YYYYMMDDTHHmmss[Z]")}`, // UTC 적용
+      event.allDay
+        ? `DTEND;VALUE=DATE:${end.format("YYYYMMDD")}` // All-day 이벤트 처리
+        : `DTEND:${end.format("YYYYMMDDTHHmmss[Z]")}`, // UTC 적용
       `SUMMARY:${event.title}${event.starAttendees?.length ? ` - ${event.starAttendees.map((a) => a.nickname).join(", ")}` : ""}`,
-      event.allDay
-        ? `DTSTART;VALUE=DATE:${start.format("YYYYMMDD")}`
-        : `DTSTART:${start.format("YYYYMMDDTHHmmss[Z]")}`,
-      event.allDay
-        ? `DTEND;VALUE=DATE:${end.format("YYYYMMDD")}`
-        : `DTEND:${end.format("YYYYMMDDTHHmmss[Z]")}`,
       `DESCRIPTION:${event.label?.name ?? ""}`,
       `CLASS:${event.linked ? "PUBLIC" : "PRIVATE"}`,
       "END:VEVENT",
